@@ -24,6 +24,8 @@ public class MenuScreen extends BaseScreen {
     private Vector2 dartCenterPos;
     private Vector2 dartSpeed;
 
+    private Vector2 distToAimVec;
+    private Vector2 distToAimCurrentStepVec;
     private boolean isTapped;
 
     @Override
@@ -35,7 +37,7 @@ public class MenuScreen extends BaseScreen {
         aimSprite = new Sprite(aim);
         aimCenterPos = new Vector2(AIM_WIDTH / 2.0f, AIM_HEIGHT / 2.0f);
         aimSprite.setSize(AIM_WIDTH, AIM_HEIGHT);
-        aimSprite.setOrigin(aimCenterPos.x, aimCenterPos.y);
+        aimSprite.setOriginCenter();
 
         dart = new Texture("dart.png");
         dartSprite = new Sprite(dart);
@@ -43,6 +45,8 @@ public class MenuScreen extends BaseScreen {
         dartSpeed = new Vector2(20.0f, 20.0f);
         dartSprite.setSize(DART_WIDTH, DART_HEIGHT);
         dartSprite.setOrigin(dartCenterPos.x, dartCenterPos.y);
+
+        distToAimCurrentStepVec = new Vector2(0,0);
 
         isTapped = false;
     }
@@ -54,7 +58,6 @@ public class MenuScreen extends BaseScreen {
         float imageRatioW = (float) Gdx.graphics.getWidth() / menuBackground.getWidth();
         int scaledHeight = (int) (menuBackground.getHeight() * imageRatioH);
         int scaledWidth = (int) (menuBackground.getWidth() * imageRatioW);
-        batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         batch.begin();
         batch.draw(menuBackground, 0, 0, scaledWidth, scaledHeight);
@@ -63,19 +66,15 @@ public class MenuScreen extends BaseScreen {
         dartSprite.setPosition(dartCenterPos.x - DART_WIDTH, dartCenterPos.y - DART_HEIGHT / 2.0f);
         dartSprite.draw(batch);
         if (isTapped) {
-            float distX = aimCenterPos.x - dartCenterPos.x;
-            float distY = aimCenterPos.y - dartCenterPos.y;
-            float distLen = (float) Math.sqrt(distX * distX + distY * distY);
-            float stepByX = distX / distLen;
-            float stepByY = distY / distLen;
-            float expectedDistX = stepByX * dartSpeed.x;
-            float expectedDistY = stepByY * dartSpeed.y;
-            float expectedDist = (float) Math.sqrt(expectedDistX * expectedDistX + expectedDistY * expectedDistY);
-            if (distLen < expectedDist) {
-                dartCenterPos.set(dartCenterPos.x + distX, dartCenterPos.y + distY);
+            float stepByX = distToAimVec.x / distToAimVec.len();
+            float stepByY = distToAimVec.y / distToAimVec.len();
+            distToAimCurrentStepVec.set(stepByX * dartSpeed.x, stepByY * dartSpeed.y);
+            if (distToAimVec.len2() < distToAimCurrentStepVec.len2()) {
+                dartCenterPos.add(distToAimVec);
                 isTapped = false;
             } else {
-                dartCenterPos.set(dartCenterPos.x + expectedDistX, dartCenterPos.y + expectedDistY);
+                dartCenterPos.add(distToAimCurrentStepVec);
+                distToAimVec.sub(distToAimCurrentStepVec);
             }
         }
         batch.end();
@@ -92,7 +91,8 @@ public class MenuScreen extends BaseScreen {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         aimCenterPos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        dartSprite.setRotation(aimCenterPos.cpy().sub(dartCenterPos.x, dartCenterPos.y).angleDeg());
+        distToAimVec = new Vector2(aimCenterPos.cpy().sub(dartCenterPos));
+        dartSprite.setRotation(aimCenterPos.cpy().sub(dartCenterPos).angleDeg());
         isTapped = true;
         return false;
     }
