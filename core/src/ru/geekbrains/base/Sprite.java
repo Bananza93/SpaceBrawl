@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
 
-public abstract class Sprite extends Rect {
+public class Sprite extends Rect {
 
     protected float angle;
     protected float scale = 1;
@@ -25,11 +25,9 @@ public abstract class Sprite extends Rect {
     }
 
     public void resize(Rect worldBounds) {
-
     }
 
     public void update(float delta) {
-
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
@@ -57,11 +55,6 @@ public abstract class Sprite extends Rect {
     }
 
     public void draw(SpriteBatch batch) {
-//        System.out.println("getLeft = " + getLeft() + ", getBottom = " + getBottom()
-//                + ", halfWidth" + halfWidth + ", halfHeight = " + halfHeight
-//                + ", getWidth = " + getWidth() + ", getHeight = " + getHeight()
-//                + ", scale = " + scale
-//                + ", angle = " + angle);
         batch.draw(
                 regions[frame],
                 getLeft(), getBottom(),

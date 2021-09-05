@@ -41,16 +41,13 @@ public class BaseScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(1, 1, 1, 1);
-        //batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     @Override
     public void resize(int width, int height) {
-        //System.out.println("resize width = " + width + " height = " + height);
         screenBounds.setSize(width, height);
         screenBounds.setLeft(0);
         screenBounds.setBottom(0);
-        //System.out.println("resize screenBounds.width = " + screenBounds.getWidth() + " screenBounds.height = " + screenBounds.getHeight());
 
         float aspect = width / (float) height;
         worldBounds.setHeight(1f);
@@ -61,18 +58,16 @@ public class BaseScreen implements Screen, InputProcessor {
         resize(worldBounds);
     }
 
-    public void resize(Rect worldBounds) {
-        System.out.println("resize worldBounds.width = " + worldBounds.getWidth() + " worldBounds.height = " + worldBounds.getHeight());
+    public boolean resize(Rect worldBounds) {
+        return false;
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
