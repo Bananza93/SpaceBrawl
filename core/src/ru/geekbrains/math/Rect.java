@@ -91,6 +91,15 @@ public class Rect {
         this.halfHeight = height / 2f;
     }
 
+
+    public boolean isMe(Vector2 touch) {
+        return touch.x >= getLeft() && touch.x <= getRight() && touch.y >= getBottom() && touch.y <= getTop();
+    }
+
+    public boolean isOutside(Rect other) {
+        return getLeft() > other.getRight() || getRight() < other.getLeft() || getBottom() > other.getTop() || getTop() < other.getBottom();
+    }
+
     @Override
     public String toString() {
         return "Rectangle: pos" + pos + " size(" + getWidth() + ", " + getHeight() + ")";

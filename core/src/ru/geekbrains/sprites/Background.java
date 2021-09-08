@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 
-public class MenuBackground extends Sprite {
+public class Background extends Sprite {
 
-    public MenuBackground(Texture region) {
+    public Background(Texture region) {
         super(new TextureRegion(region));
     }
 
