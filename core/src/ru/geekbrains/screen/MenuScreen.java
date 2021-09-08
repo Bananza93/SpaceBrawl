@@ -31,7 +31,7 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        bg = new Texture("bg.jpg");
+        bg = new Texture("textures/bg.png");
         atlas = new TextureAtlas("textures/menuAtlas.tpack");
 
         background = new Background(bg);
