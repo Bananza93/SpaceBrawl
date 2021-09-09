@@ -1,6 +1,7 @@
 package ru.geekbrains.base;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -81,11 +82,13 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        System.out.println(Input.Keys.toString(keycode) + " pressed");
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
+        System.out.println(Input.Keys.toString(keycode) + " released");
         return false;
     }
 

@@ -4,6 +4,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import ru.geekbrains.math.Rect;
 
 public class Sprite extends Rect {
@@ -16,6 +19,15 @@ public class Sprite extends Rect {
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
+    }
+
+    public Sprite(TextureRegion[][] regions) {
+        ArrayList<TextureRegion> list = new ArrayList<>();
+        for (TextureRegion[] rows : regions) {
+            list.addAll(Arrays.asList(rows));
+        }
+        this.regions = new TextureRegion[list.size()];
+        list.toArray(this.regions);
     }
 
     public void setHeightProportion(float height) {
