@@ -27,6 +27,9 @@ public class MainShip extends BaseShip {
     private final float bulletHeight;
     private final int bulletDamage;
 
+    private float timer = 0.0f;
+    private final float shootDelay = 0.35f;
+
     private Rect worldBounds;
 
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
@@ -43,13 +46,16 @@ public class MainShip extends BaseShip {
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
         setHeightProportion(HEIGHT);
-        setLeft(0f - halfWidth);
         setBottom(worldBounds.getBottom() + INIT_Y_PADDING);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
+        if ((timer += delta) >= shootDelay) {
+            timer -= shootDelay;
+            shoot();
+        }
         if (isMovingForward && !isMovingBackward) goForward();
         if (isMovingBackward && !isMovingForward) goBackward();
         if (isMovingLeft && !isMovingRight) goLeft();
