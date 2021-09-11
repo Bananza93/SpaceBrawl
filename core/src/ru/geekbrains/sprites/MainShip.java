@@ -1,24 +1,42 @@
 package ru.geekbrains.sprites;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.BaseShip;
 import ru.geekbrains.math.Rect;
+import ru.geekbrains.pool.BulletPool;
 
 public class MainShip extends BaseShip {
 
     private final float HEIGHT = 0.15f;
     private final float INIT_Y_PADDING = 0.05f;
-    private final float SPEED = 0.005f;
+    private final float SPEED = 0.0075f;
+
     private boolean isMovingForward = false;
     private boolean isMovingBackward = false;
     private boolean isMovingLeft = false;
     private boolean isMovingRight = false;
+
+    private final BulletPool bulletPool;
+    private final TextureRegion bulletRegion;
+    private final Vector2 bulletV;
+    private final Vector2 bulletPos;
+    private final float bulletHeight;
+    private final int bulletDamage;
+
     private Rect worldBounds;
 
-    public MainShip(TextureRegion region) {
-        super(region.split(region.getRegionWidth() / 2, region.getRegionHeight()));
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
+        super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.bulletPool = bulletPool;
+        bulletRegion = atlas.findRegion("bulletMainShip");
+        bulletV = new Vector2(0, 0.5f);
+        bulletPos = new Vector2();
+        bulletHeight = 0.01f;
+        bulletDamage = 1;
     }
 
     @Override
@@ -88,4 +106,9 @@ public class MainShip extends BaseShip {
         }
     }
 
+    private void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bulletPos.set(pos.x, pos.y + getHalfHeight());
+        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
+    }
 }
