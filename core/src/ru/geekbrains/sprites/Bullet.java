@@ -1,5 +1,7 @@
 package ru.geekbrains.sprites;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -8,6 +10,7 @@ import ru.geekbrains.math.Rect;
 
 public class Bullet extends Sprite {
 
+    private static final Sound shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     private final Vector2 v = new Vector2();
 
     private Rect worldBounds;
@@ -34,6 +37,7 @@ public class Bullet extends Sprite {
         setHeightProportion(height);
         this.worldBounds = worldBounds;
         this.damage = damage;
+        shootSound.play();
     }
 
     @Override
