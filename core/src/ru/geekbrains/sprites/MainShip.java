@@ -1,8 +1,9 @@
 package ru.geekbrains.sprites;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.base.BaseShip;
@@ -11,63 +12,50 @@ import ru.geekbrains.pool.BulletPool;
 
 public class MainShip extends BaseShip {
 
-    private final float HEIGHT = 0.15f;
-    private final float INIT_Y_PADDING = 0.05f;
-    private final float SPEED = 0.0075f;
+    private static final float MAIN_SHIP_HEIGHT = 0.15f;
+    private static final float MAIN_SHIP_INIT_Y_PADDING = 0.05f;
+    private static final float MAIN_SHIP_SPEED = 0.0075f;
+    private static final int MAIN_SHIP_INIT_HEALTH = 100;
+    private static final float MAIN_SHIP_SHOOT_DELAY = 0.35f;
+    private static final float MAIN_SHIP_BULLET_HEIGHT = 0.01f;
+    private static final Vector2 MAIN_SHIP_BULLET_SPEED = new Vector2(0, 0.5f);
+    private static final int MAIN_SHIP_BULLET_DAMAGE = 1;
+    private static final Sound MAIN_SHIP_SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
-    private boolean isMovingForward = false;
-    private boolean isMovingBackward = false;
     private boolean isMovingLeft = false;
     private boolean isMovingRight = false;
 
-    private final BulletPool bulletPool;
-    private final TextureRegion bulletRegion;
-    private final Vector2 bulletV;
-    private final Vector2 bulletPos;
-    private final float bulletHeight;
-    private final int bulletDamage;
-
-    private float timer = 0.0f;
-    private final float shootDelay = 0.35f;
-
-    private Rect worldBounds;
-
     public MainShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
+        this.shipHeight = MAIN_SHIP_HEIGHT;
+        this.shipSpeed = MAIN_SHIP_SPEED;
+        this.shipHealth = MAIN_SHIP_INIT_HEALTH;
         this.bulletPool = bulletPool;
-        bulletRegion = atlas.findRegion("bulletMainShip");
-        bulletV = new Vector2(0, 0.5f);
-        bulletPos = new Vector2();
-        bulletHeight = 0.01f;
-        bulletDamage = 1;
+        this.bulletRegion = atlas.findRegion("bulletMainShip");
+        this.bulletHeight = MAIN_SHIP_BULLET_HEIGHT;
+        this.bulletSpeed = MAIN_SHIP_BULLET_SPEED;
+        this.bulletDamage = MAIN_SHIP_BULLET_DAMAGE;
+        this.shootDelay = MAIN_SHIP_SHOOT_DELAY;
+        this.shootSound = MAIN_SHIP_SHOOT_SOUND;
+        this.bulletPos = new Vector2();
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        this.worldBounds = worldBounds;
-        setHeightProportion(HEIGHT);
-        setBottom(worldBounds.getBottom() + INIT_Y_PADDING);
+        super.resize(worldBounds);
+        setBottom(worldBounds.getBottom() + MAIN_SHIP_INIT_Y_PADDING);
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        if ((timer += delta) >= shootDelay) {
-            timer -= shootDelay;
-            shoot();
-        }
-        if (isMovingForward && !isMovingBackward) goForward();
-        if (isMovingBackward && !isMovingForward) goBackward();
+        bulletPos.set(pos.x, pos.y + getHalfHeight());
         if (isMovingLeft && !isMovingRight) goLeft();
         if (isMovingRight && !isMovingLeft) goRight();
     }
 
     public boolean keyDown(int keycode) {
-        if (keycode == Input.Keys.UP) {
-            isMovingForward = true;
-        } else if (keycode == Input.Keys.DOWN) {
-            isMovingBackward = true;
-        } else if (keycode == Input.Keys.LEFT) {
+        if (keycode == Input.Keys.LEFT) {
             isMovingLeft = true;
         } else if (keycode == Input.Keys.RIGHT) {
             isMovingRight = true;
@@ -76,11 +64,7 @@ public class MainShip extends BaseShip {
     }
 
     public boolean keyUp(int keycode) {
-        if (keycode == Input.Keys.UP) {
-            isMovingForward = false;
-        } else if (keycode == Input.Keys.DOWN) {
-            isMovingBackward = false;
-        } else if (keycode == Input.Keys.LEFT) {
+        if (keycode == Input.Keys.LEFT) {
             isMovingLeft = false;
         } else if (keycode == Input.Keys.RIGHT) {
             isMovingRight = false;
@@ -88,33 +72,15 @@ public class MainShip extends BaseShip {
         return false;
     }
 
-    private void goRight() {
-        if (worldBounds.getRight() - this.getRight() > SPEED) {
-            this.pos.add(SPEED, 0f);
-        }
-    }
-
     private void goLeft() {
-        if (this.getLeft() - worldBounds.getLeft() > SPEED) {
-            this.pos.sub(SPEED, 0f);
+        if (this.getLeft() - worldBounds.getLeft() > this.shipSpeed) {
+            this.pos.sub(this.shipSpeed, 0f);
         }
     }
 
-    private void goBackward() {
-        if (this.getBottom() - worldBounds.getBottom() > SPEED) {
-            this.pos.sub(0f, SPEED);
+    private void goRight() {
+        if (worldBounds.getRight() - this.getRight() > this.shipSpeed) {
+            this.pos.add(this.shipSpeed, 0f);
         }
-    }
-
-    private void goForward() {
-        if (worldBounds.getTop() - this.getTop() > SPEED) {
-            this.pos.add(0f, SPEED);
-        }
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bulletPos.set(pos.x, pos.y + getHalfHeight());
-        bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
     }
 }

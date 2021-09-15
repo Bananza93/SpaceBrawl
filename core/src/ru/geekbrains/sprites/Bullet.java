@@ -10,7 +10,6 @@ import ru.geekbrains.math.Rect;
 
 public class Bullet extends Sprite {
 
-    private static final Sound shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     private final Vector2 v = new Vector2();
 
     private Rect worldBounds;
@@ -37,7 +36,6 @@ public class Bullet extends Sprite {
         setHeightProportion(height);
         this.worldBounds = worldBounds;
         this.damage = damage;
-        shootSound.play();
     }
 
     @Override

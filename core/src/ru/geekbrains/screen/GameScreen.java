@@ -9,9 +9,11 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.sprites.Background;
 import ru.geekbrains.sprites.MainShip;
 import ru.geekbrains.sprites.Star;
+import ru.geekbrains.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
 
@@ -25,6 +27,9 @@ public class GameScreen extends BaseScreen {
     private Background background;
     private Star[] stars;
     private MainShip mainShip;
+    private EnemyPool enemyPool;
+
+    private EnemyEmitter enemyEmitter;
 
     private BulletPool bulletPool;
 
@@ -40,7 +45,9 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
+        enemyPool = new EnemyPool(atlas, bulletPool, worldBounds);
         mainShip = new MainShip(atlas, bulletPool);
+        enemyEmitter = new EnemyEmitter(atlas, enemyPool, worldBounds);
         gameBackgroundMusic.setLooping(true);
         gameBackgroundMusic.setVolume(0.8f);
         gameBackgroundMusic.play();
@@ -70,6 +77,7 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        enemyPool.dispose();
         gameBackgroundMusic.dispose();
     }
 
@@ -101,10 +109,14 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+
+        enemyEmitter.generate(delta);
     }
 
     private void freeAllDestroyed() {
         bulletPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
     private void draw() {
@@ -115,6 +127,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 }
