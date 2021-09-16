@@ -28,7 +28,8 @@ public class EnemyShip extends BaseShip {
     public void update(float delta) {
         super.update(delta);
         this.bulletPos.set(pos.x, pos.y - getHalfHeight());
-        this.pos.sub(0.0f, this.shipSpeed);
+        float speed = this.ableToShoot ? this.shipSpeed : this.shipSpeed * 2;
+        this.pos.sub(0.0f, speed);
     }
 
     public void setupShip(
@@ -49,6 +50,7 @@ public class EnemyShip extends BaseShip {
         this.bulletSpeed.set(bulletSpeed);
         this.bulletDamage = bulletDamage;
         this.shootDelay = shootDelay;
+        this.timeSinceLastShot = shootDelay;
         setHeightProportion(shipHeight);
     }
 }
