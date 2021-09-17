@@ -34,7 +34,6 @@ public abstract class BaseShip extends Sprite {
 
     public BaseShip(TextureRegion region, int rows, int columns, int frames) {
         super(region.split(region.getRegionWidth() / columns, region.getRegionHeight() / rows), frames);
-        this.timeSinceLastShot = 0.0f;
         this.ableToShoot = false;
     }
 

@@ -12,7 +12,7 @@ import ru.geekbrains.pool.BulletPool;
 
 public class MainShip extends BaseShip {
 
-    private static final float MAIN_SHIP_HEIGHT = 0.15f;
+    private static final float MAIN_SHIP_HEIGHT = 0.1f;
     private static final float MAIN_SHIP_INIT_Y_PADDING = 0.05f;
     private static final float MAIN_SHIP_SPEED = 0.0075f;
     private static final int MAIN_SHIP_INIT_HEALTH = 100;
@@ -36,6 +36,7 @@ public class MainShip extends BaseShip {
         this.bulletSpeed = MAIN_SHIP_BULLET_SPEED;
         this.bulletDamage = MAIN_SHIP_BULLET_DAMAGE;
         this.shootDelay = MAIN_SHIP_SHOOT_DELAY;
+        this.timeSinceLastShot = MAIN_SHIP_SHOOT_DELAY;
         this.shootSound = MAIN_SHIP_SHOOT_SOUND;
         this.bulletPos = new Vector2();
     }
