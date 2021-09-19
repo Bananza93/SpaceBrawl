@@ -10,7 +10,7 @@ import ru.geekbrains.base.Sprite;
 public class Explosion extends Sprite {
 
     private static final float ANIMATE_INTERVAL = 0.015f;
-    private static final Sound EXPLOSION_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
+    private final Sound EXPLOSION_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
 
     private float animateTimer;
 
@@ -39,9 +39,5 @@ public class Explosion extends Sprite {
     public void destroy() {
         super.destroy();
         frame = 0;
-    }
-
-    public static void dispose() {
-        EXPLOSION_SOUND.dispose();
     }
 }

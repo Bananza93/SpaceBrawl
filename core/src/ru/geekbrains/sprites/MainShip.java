@@ -21,7 +21,7 @@ public class MainShip extends BaseShip {
     private static final float BULLET_HEIGHT = 0.01f;
     private static final Vector2 BULLET_SPEED = new Vector2(0, 0.5f);
     private static final int BULLET_DAMAGE = 1;
-    private static final Sound SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
+    private final Sound SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
 
     private boolean isMovingLeft = false;
     private boolean isMovingRight = false;
@@ -94,9 +94,5 @@ public class MainShip extends BaseShip {
                         || rect.getBottom() > pos.y
                         || rect.getTop() < getBottom()
         );
-    }
-
-    public static void dispose() {
-        SHOOT_SOUND.dispose();
     }
 }
