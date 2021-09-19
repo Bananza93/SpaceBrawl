@@ -6,9 +6,13 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprites.Bullet;
+import ru.geekbrains.sprites.Explosion;
 
 public abstract class BaseShip extends Sprite {
+
+    private static final float DAMAGE_ANIMATE_INTERVAL = 0.1f;
 
     protected float shipHeight;
     protected float shipSpeed;
@@ -25,6 +29,9 @@ public abstract class BaseShip extends Sprite {
     protected float shootDelay;
     protected float timeSinceLastShot;
 
+    protected ExplosionPool explosionPool;
+    private float damageAnimateTimer = DAMAGE_ANIMATE_INTERVAL;
+
     protected Rect worldBounds;
 
     protected boolean ableToShoot;
@@ -33,7 +40,7 @@ public abstract class BaseShip extends Sprite {
     }
 
     public BaseShip(TextureRegion region, int rows, int columns, int frames) {
-        super(region.split(region.getRegionWidth() / columns, region.getRegionHeight() / rows), frames);
+        super(region, rows, columns, frames);
         this.ableToShoot = false;
     }
 
@@ -55,6 +62,10 @@ public abstract class BaseShip extends Sprite {
             ableToShoot = false;
         }
 
+        damageAnimateTimer += delta;
+        if (damageAnimateTimer >= DAMAGE_ANIMATE_INTERVAL) {
+            frame = 0;
+        }
     }
 
     private void shoot() {
@@ -63,8 +74,29 @@ public abstract class BaseShip extends Sprite {
         shootSound.play();
     }
 
-    public void hitHandling(int damage) {
+    @Override
+    public void destroy() {
+        super.destroy();
+        boom();
+    }
 
+    public void damage(int damage) {
+        shipHealth -= damage;
+        if (shipHealth <= 0) {
+            shipHealth = 0;
+            destroy();
+        }
+        frame = 1;
+        damageAnimateTimer = 0f;
+    }
+
+    public int getBulletDamage() {
+        return bulletDamage;
+    }
+
+    private void boom() {
+        Explosion explosion = explosionPool.obtain();
+        explosion.set(pos, getHeight());
     }
 
 }

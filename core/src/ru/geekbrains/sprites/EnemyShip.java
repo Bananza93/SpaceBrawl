@@ -9,19 +9,21 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.base.BaseShip;
+import ru.geekbrains.pool.ExplosionPool;
 
 public class EnemyShip extends BaseShip {
 
-    private static final Sound ENEMY_SHIP_SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
-    private static final String ENEMY_SHIP_BULLET_ATLAS_REGION = "bulletEnemy";
+    private static final Sound SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+    private static final String BULLET_ATLAS_REGION = "bulletEnemy";
 
-    public EnemyShip(TextureAtlas atlas, BulletPool bulletPool, Rect worldBounds) {
+    public EnemyShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
         this.bulletPool = bulletPool;
         this.worldBounds = worldBounds;
-        this.shootSound = ENEMY_SHIP_SHOOT_SOUND;
-        this.bulletRegion = atlas.findRegion(ENEMY_SHIP_BULLET_ATLAS_REGION);
+        this.shootSound = SHOOT_SOUND;
+        this.bulletRegion = atlas.findRegion(BULLET_ATLAS_REGION);
         this.bulletSpeed = new Vector2();
         this.bulletPos = new Vector2();
+        this.explosionPool = explosionPool;
     }
 
     @Override
@@ -52,5 +54,24 @@ public class EnemyShip extends BaseShip {
         this.shootDelay = shootDelay;
         this.timeSinceLastShot = shootDelay;
         setHeightProportion(shipHeight);
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        this.ableToShoot = false;
+    }
+
+    public boolean isCollision(Rect rect) {
+        return !(
+                rect.getRight() < getLeft()
+                        || rect.getLeft() > getRight()
+                        || rect.getBottom() > getTop()
+                        || rect.getTop() < pos.y
+        );
+    }
+
+    public static void dispose() {
+        SHOOT_SOUND.dispose();
     }
 }

@@ -22,7 +22,11 @@ public class Sprite extends Rect {
         regions[0] = region;
     }
 
-    public Sprite(TextureRegion[][] regions, int frames) {
+    public Sprite(TextureRegion region, int rows, int columns, int frames) {
+        this(region.split(region.getRegionWidth() / columns, region.getRegionHeight() / rows), frames);
+    }
+
+    private Sprite(TextureRegion[][] regions, int frames) {
         this.regions = new TextureRegion[frames];
         int currentFrame = 0;
         for (TextureRegion[] rows : regions) {
