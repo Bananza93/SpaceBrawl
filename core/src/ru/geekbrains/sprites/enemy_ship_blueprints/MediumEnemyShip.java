@@ -21,14 +21,14 @@ public class MediumEnemyShip {
     private MediumEnemyShip() {
     }
 
-    public static void transform(EnemyShip ship, TextureAtlas atlas) {
+    public static void transform(EnemyShip ship, TextureAtlas atlas, int level) {
         ship.setupShip(
                 Regions.split(atlas.findRegion(SHIP_ATLAS_REGION), 1, 2, 2),
                 SHIP_HEIGHT,
                 SHIP_SPEED,
                 SHIP_INIT_HEALTH,
                 BULLET_HEIGHT,
-                BULLET_DAMAGE,
+                BULLET_DAMAGE * level,
                 BULLET_SPEED,
                 SHOOT_DELAY
         );

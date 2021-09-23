@@ -20,24 +20,28 @@ public class EnemyEmitter {
     private final EnemyPool enemyPool;
     private final TextureAtlas atlas;
 
+    private int level;
+
     public EnemyEmitter(TextureAtlas atlas, EnemyPool enemyPool, Rect worldBounds) {
+        this.level = 1;
         this.atlas = atlas;
         this.enemyPool = enemyPool;
         this.worldBounds = worldBounds;
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int frags) {
         generateTimer += delta;
+        level = frags / 10 + 1;
         if (generateTimer >= GENERATE_INTERVAL) {
             generateTimer = 0f;
             EnemyShip enemyShip = enemyPool.obtain();
             float type = (float) Math.random();
             if (type <= 0.65f) {
-                SmallEnemyShip.transform(enemyShip, atlas);
+                SmallEnemyShip.transform(enemyShip, atlas, level);
             } else if (type <= 0.9f) {
-                MediumEnemyShip.transform(enemyShip, atlas);
+                MediumEnemyShip.transform(enemyShip, atlas, level);
             } else {
-                LargeEnemyShip.transform(enemyShip, atlas);
+                LargeEnemyShip.transform(enemyShip, atlas, level);
             }
             enemyShip.pos.x = MathUtils.random(
                     worldBounds.getLeft() + enemyShip.getHalfWidth() + SIDE_INDENT,
@@ -45,5 +49,9 @@ public class EnemyEmitter {
             );
             enemyShip.setBottom(worldBounds.getTop());
         }
+    }
+
+    public int getLevel() {
+        return level;
     }
 }
