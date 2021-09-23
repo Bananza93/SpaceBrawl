@@ -13,7 +13,7 @@ import ru.geekbrains.pool.ExplosionPool;
 
 public class EnemyShip extends BaseShip {
 
-    private static final Sound SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+    private final Sound SHOOT_SOUND = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
     private static final String BULLET_ATLAS_REGION = "bulletEnemy";
 
     public EnemyShip(TextureAtlas atlas, BulletPool bulletPool, ExplosionPool explosionPool, Rect worldBounds) {
@@ -69,9 +69,5 @@ public class EnemyShip extends BaseShip {
                         || rect.getBottom() > getTop()
                         || rect.getTop() < pos.y
         );
-    }
-
-    public static void dispose() {
-        SHOOT_SOUND.dispose();
     }
 }

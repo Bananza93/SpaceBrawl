@@ -99,4 +99,7 @@ public abstract class BaseShip extends Sprite {
         explosion.set(pos, getHeight());
     }
 
+    public int getShipHealth() {
+        return shipHealth;
+    }
 }
